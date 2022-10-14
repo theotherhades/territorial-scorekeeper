@@ -26,7 +26,7 @@ async def clan(interaction: Interaction, arg: str):
     try:
         data = pyterri_clan.getClan(arg)
         embed = nextcord.Embed(title = arg.upper(), description = f"**Score:** {data['score']}", color = nextcord.Color.blue())
-    except IndexError:
+    except IndexError or TypeError:
         embed = nextcord.Embed(title = arg.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
 
     await interaction.response.send_message(embed = embed)
