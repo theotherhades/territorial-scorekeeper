@@ -47,6 +47,8 @@ async def lb(interaction: Interaction, limit: int = 0):
     for clandata in data:
         embed.add_field(name = f"{clandata['rank']}. {clandata['clan'].upper()}", value = clandata["score"])
 
+    print(len(embed))
+
     await interaction.response.send_message(embed = embed)
 
 client.run(os.environ["CLIENT_TOKEN"])
