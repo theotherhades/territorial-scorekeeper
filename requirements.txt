@@ -1,0 +1,2 @@
+nextcord==2.2.0
+pyterri==0.1.1
