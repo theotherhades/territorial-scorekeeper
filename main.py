@@ -22,16 +22,30 @@ async def ping(interaction: Interaction):
     await interaction.response.send_message(embed = embed)
 
 @client.slash_command(name = "clan", description = "Get score and rank for a clan", guild_ids = GUILD_IDS)
-async def clan(interaction: Interaction, arg: str):
+async def clan(interaction: Interaction, tag: str):
     try:
-        data = pyterri_clan.getClan(arg)
-        embed = nextcord.Embed(title = arg.upper(), color = nextcord.Color.blue())
+        data = pyterri_clan.getClan(tag)
+        embed = nextcord.Embed(title = tag.upper(), color = nextcord.Color.blue())
         embed.add_field(name = "Rank", value = data["rank"])
         embed.add_field(name = "Score", value = data["score"])
     except IndexError:
-        embed = nextcord.Embed(title = arg.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
+        embed = nextcord.Embed(title = tag.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
     except TypeError:
-        embed = nextcord.Embed(title = arg.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
+        embed = nextcord.Embed(title = tag.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
+
+    await interaction.response.send_message(embed = embed)
+
+@client.slash_command(name = "lb", description = "Get the clan leaderboard", guild_ids = GUILD_IDS)
+async def lb(interaction: Interaction, limit: int = 0):
+    if limit != 0:
+        data = pyterri_clan.getClans(limit = 10)
+    else:
+        data = pyterri_clan.getClans(limit = limit)
+
+    embed = nextcord.Embed(title = f"Top {limit} clans", color = nextcord.Color.blurple())
+
+    for clandata in data:
+        embed.add_field(name = f"{clandata['rank']}. {clandata['clan'].upper()}", value = clandata["score"])
 
     await interaction.response.send_message(embed = embed)
 
