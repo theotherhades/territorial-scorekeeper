@@ -25,7 +25,7 @@ async def ping(interaction: Interaction):
 async def clan(interaction: Interaction, arg: str):
     try:
         data = pyterri_clan.getClan(arg)
-        embed = nextcord.Embed(TitledHelpFormatter = arg.upper(), description = f"**Score:** {data['score']}", color = nextcord.Color.blue())
+        embed = nextcord.Embed(title = arg.upper(), description = f"**Score:** {data['score']}", color = nextcord.Color.blue())
     except IndexError:
         embed = nextcord.Embed(title = arg.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
 
