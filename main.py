@@ -37,8 +37,10 @@ async def clan(interaction: Interaction, tag: str):
 
 @client.slash_command(name = "lb", description = "Get the clan leaderboard", guild_ids = GUILD_IDS)
 async def lb(interaction: Interaction, limit: int = 0):
-    if limit != 0:
+    if (limit != 0) and (limit <= 25):
         data = pyterri_clan.getClans(limit = limit)
+    elif limit > 25:
+        await interaction.response.send_message(embed = nextcord.Embed(title = "Invalid limit provided", description = "Due to discord constraints no more than the top 25 clans can be displayed.", color = nextcord.Color.red()))
     else:
         data = pyterri_clan.getClans(limit = 10)
 
