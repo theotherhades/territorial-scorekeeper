@@ -28,6 +28,8 @@ async def clan(interaction: Interaction, arg: str):
     except IndexError:
         embed = nextcord.Embed(name = arg.upper(), description = "No data was found for this clan, most likely because it does not have a recorded score.", color = nextcord.Color.red())
 
+    print(arg)
+    print(data)
     await interaction.response.send_message(embed = embed)
 
 client.run(os.environ["CLIENT_TOKEN"])
