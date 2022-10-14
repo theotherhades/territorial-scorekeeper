@@ -38,17 +38,14 @@ async def clan(interaction: Interaction, tag: str):
 @client.slash_command(name = "lb", description = "Get the clan leaderboard", guild_ids = GUILD_IDS)
 async def lb(interaction: Interaction, limit: int = 0):
     if limit != 0:
-        data = pyterri_clan.getClans(limit = 10)
-    else:
         data = pyterri_clan.getClans(limit = limit)
+    else:
+        data = pyterri_clan.getClans(limit = 10)
 
     embed = nextcord.Embed(title = f"Top {limit} clans", color = nextcord.Color.blurple())
 
     for clandata in data:
         embed.add_field(name = f"{clandata['rank']}. {clandata['clan'].upper()}", value = clandata["score"])
-
-    print(len(embed))
-    print(len(data))
 
     await interaction.response.send_message(embed = embed)
 
