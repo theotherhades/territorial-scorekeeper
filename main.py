@@ -7,7 +7,9 @@ from nextcord.ext import commands
 
 client = commands.Bot()
 
-GUILD_IDS = list().append(i.id for i in client.guilds)
+GUILD_IDS = list()
+for i in client.guilds:
+    GUILD_IDS.append(i.id)
 
 @client.event
 async def on_ready():
