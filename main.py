@@ -97,6 +97,7 @@ async def announce(interaction: Interaction, header: str, content: str):
     for guild in GUILD_IDS:
         update_channel = client.get_channel(int(db.find_one({"_id": str(guild)})["update_channel"]))
         print(db.find_one({"_id": str(guild)})["update_channel"])
+        print(GUILD_IDS)
         await update_channel.message.send(embed = embed)
 
         count += 1
