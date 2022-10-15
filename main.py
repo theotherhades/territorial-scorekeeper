@@ -82,8 +82,24 @@ async def lb(interaction: Interaction, limit: int = 0):
 
 @client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages", guild_ids = GUILD_IDS)
 async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
-    db.update_one({"_id": str(interaction.guild.id)}, {"$set": {"update_channel": str(channel.id)}})
-    print(db.find_one({"_id": str(interaction.guild.id)}))
-    await interaction.response.send_message(f":white_check_mark: Set update channel to {channel.jump_url}")
+    if db.count_documents({"_id": str(interaction.guild.id)}, limit = 1):
+        db.insert_one({"_id": str(interaction.guild.id), "update_channel": str(channel.id)})
+    else:
+        db.update_one({"_id": str(interaction.guild.id)}, {"$set": {"update_channel": str(channel.id)}})
+
+    await interaction.response.send_message(f":white_check_mark: Set update channel to {channel.mention}")
+
+@client.slash_command(name = "announce", description = "Announce something to every update channel (only for bot owner)", guild_ids = GUILD_IDS)
+async def announce(interaction: Interaction, header: str, content: str):
+    embed = nextcord.Embed(title = header, description = content, color = nextcord.Color.blue())
+
+    count = 0
+    for guild in GUILD_IDS:
+        update_channel = int(db.find_one({"_id": str(guild)})["update_channel"])
+        await update_channel.message.send(embed = embed)
+
+        count += 1
+
+    await interaction.response.send_message(f":white_check_mark: Successfully sent announcement to **{str(count)}** servers")
 
 client.run(os.environ["CLIENT_TOKEN"])
