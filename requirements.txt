@@ -1,2 +1,4 @@
 nextcord==2.2.0
 pyterri==0.1.1
+pymongo==4.2.0
+matplotlib==3.6.1

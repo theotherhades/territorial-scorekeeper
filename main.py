@@ -1,12 +1,15 @@
-from optparse import TitledHelpFormatter
 import os
+import io
 import nextcord
+import matplotlib.pyplot as plot
 from pyterri import clan as pyterri_clan
+from pymongo import MongoClient
 from nextcord import Interaction, SlashOption, ChannelType
 from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 
 client = commands.Bot()
+# db = MongoClient(os.environ["DB_URL"])["scorekeeper-db"]["scorekeeper-db"]
 
 GUILD_IDS = list()
 for i in client.guilds:
@@ -44,11 +47,42 @@ async def lb(interaction: Interaction, limit: int = 0):
     else:
         data = pyterri_clan.getClans(limit = 10)
 
+    # Create graph
+    graph_clanlist = list()
+    graph_scorelist = list()
+    for i in data:
+        graph_clanlist.append(i["clan"])
+        graph_scorelist.append(float(i["score"]))
+
+    plot.bar(graph_clanlist, graph_scorelist)
+    plot.title(f"Visualization")
+    plot.xlabel("Clan")
+    plot.ylabel("Score")
+
+    data_stream = io.BytesIO()
+    plot.savefig(data_stream, format = "png")
+    data_stream.seek(0)
+    img = nextcord.File(data_stream, filename = "plot.png")
+
+    """
+    with open("plot.png", "rb") as f:
+        img = nextcord.File(f)
+    
+    os.remove("plot.png")
+    """
+
     embed = nextcord.Embed(title = f"Top {limit} clans", color = nextcord.Color.blurple())
+    embed.set_image(url = "attachment://plot.png")
 
     for clandata in data:
         embed.add_field(name = f"{clandata['rank']}. {clandata['clan'].upper()}", value = clandata["score"])
 
-    await interaction.response.send_message(embed = embed)
+    await interaction.response.send_message(embed = embed, file = img)
+    plot.clf()
+
+"""
+@client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages")
+async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
+"""
 
 client.run(os.environ["CLIENT_TOKEN"])
