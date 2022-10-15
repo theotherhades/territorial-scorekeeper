@@ -82,7 +82,8 @@ async def lb(interaction: Interaction, limit: int = 0):
 
 @client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages", guild_ids = GUILD_IDS)
 async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
-    db.update_one({"_id": "update_channels"}, {"$set": {str(interaction.guild.id): str(channel.id)}})
+    db.update_one({"_id": str(interaction.guild.id)}, {"$set": {"update_channel": str(channel.id)}})
+    print(db.find_one({"_id": str(interaction.guild.id)}))
     await interaction.response.send_message(f":white_check_mark: Set update channel to {channel.jump_url}")
 
 client.run(os.environ["CLIENT_TOKEN"])
