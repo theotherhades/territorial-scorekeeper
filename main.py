@@ -80,7 +80,7 @@ async def lb(interaction: Interaction, limit: int = 0):
     await interaction.response.send_message(embed = embed, file = img)
     plot.clf()
 
-@client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages")
+@client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages", guild_ids = GUILD_IDS)
 async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
     db.update_one({"_id": "update_channels"}, {"$set": {interaction.guild.id: channel.id}})
     await interaction.response.send_message(f":white_check_mark: Set update channel to {GuildChannel}")
