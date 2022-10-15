@@ -9,7 +9,7 @@ from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 
 client = commands.Bot()
-# db = MongoClient(os.environ["DB_URL"])["scorekeeper-db"]["scorekeeper-db"]
+db = MongoClient(os.environ["DB_URL"])["scorekeeper-db"]["scorekeeper-db"]
 
 GUILD_IDS = list()
 for i in client.guilds:
@@ -80,9 +80,9 @@ async def lb(interaction: Interaction, limit: int = 0):
     await interaction.response.send_message(embed = embed, file = img)
     plot.clf()
 
-"""
 @client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages")
 async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
-"""
+    db.update_one({"_id": "update_channels"}, {"$set": {interaction.guild.id: channel.id}})
+    await interaction.response.send_message(f":white_check_mark: Set update channel to {GuildChannel}")
 
 client.run(os.environ["CLIENT_TOKEN"])
