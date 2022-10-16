@@ -14,10 +14,7 @@ collection = cluster["scorekeeper-db"]["scorekeeper-db"]
 clan_db = dict()
 
 for document in collection.find():
-    print(document["_id"])
-    clan_db[document["_id"]] = document
-
-print(clan_db)
+    clan_db[str(document["_id"])] = document
 
 GUILD_IDS = list()
 for i in client.guilds:
