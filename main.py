@@ -16,6 +16,8 @@ clan_db = dict()
 for document in collection.find():
     clan_db[document["_id"]] = document
 
+print(clan_db)
+
 GUILD_IDS = list()
 for i in client.guilds:
     GUILD_IDS.append(i.id)
