@@ -81,6 +81,7 @@ async def time(interaction: Interaction, clan: str):
     else:
         graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8]
         graph_points = db.collection.find_one({"_id": "634b894eb2cbe43b548fa25c"})["EXAMPLE"]
+        print(db.collection.find_one({"_id": "634b894eb2cbe43b548fa25c"}))
 
         plot.plot(graph_indexes, graph_points)
         plot.title(f"Score over time: {clan.upper()}")
