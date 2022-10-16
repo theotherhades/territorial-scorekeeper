@@ -73,30 +73,29 @@ async def lb(interaction: Interaction, limit: int = 0):
     await interaction.response.send_message(embed = embed, file = img)
     plot.clf()
 
-@client.slash_command(name = "setupdatechannel", description = "Set the channel where the scorekeeper will send update messages", guild_ids = GUILD_IDS)
-async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
-    if db.count_documents({"_id": str(interaction.guild.id)}, limit = 1):
-        db.insert_one({"_id": str(interaction.guild.id), "update_channel": str(channel.id)})
+@client.slash_command(name = "time", description = "in development", guild_ids = GUILD_IDS)
+async def time(interaction: Interaction, clan: str):
+    if clan.upper() != "EXAMPLE":
+        await interaction.response.send_message("clan must be `EXAMPLE` for now")
+        return
     else:
-        db.update_one({"_id": str(interaction.guild.id)}, {"$set": {"update_channel": str(channel.id)}})
-    
-    print(f"{interaction.guild.id}: {channel.id}")
+        graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8]
+        graph_points = db.find_one({"_id": "634b894eb2cbe43b548fa25c"})["EXAMPLE"]
 
-    await interaction.response.send_message(f":white_check_mark: Set update channel to {channel.mention}")
+        plot.plot(graph_indexes, graph_points)
+        plot.title(f"Score over time: {clan.upper()}")
+        plot.xlabel("Time")
+        plot.ylabel("Score")
 
-@client.slash_command(name = "announce", description = "Announce something to every update channel (only for bot owner)", guild_ids = GUILD_IDS)
-async def announce(interaction: Interaction, header: str, content: str):
-    embed = nextcord.Embed(title = header, description = content, color = nextcord.Color.blue())
+        data_stream = io.BytesIO()
+        plot.savefig(data_stream, format = "png")
+        data_stream.seek(0)
+        img = nextcord.File(data_stream, filename = "plot.png")
 
-    count = 0
-    for guild in GUILD_IDS:
-        update_channel = client.get_channel(int(db.find_one({"_id": str(guild)})["update_channel"]))
-        print(db.find_one({"_id": str(guild)})["update_channel"])
-        print(GUILD_IDS)
-        await update_channel.message.send(embed = embed)
+        embed = nextcord.Embed(title = f"Score over time for {clan.upper()}", color = nextcord.Color.blurple())
+        embed.set_image(url = "attachments://plot.png")
 
-        count += 1
-
-    await interaction.response.send_message(f":white_check_mark: Successfully sent announcement to **{str(count)}** servers")
+        await interaction.response.send_message(embed = embed, file = img)
+        plot.clf()
 
 client.run(os.environ["CLIENT_TOKEN"])
