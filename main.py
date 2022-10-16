@@ -9,7 +9,12 @@ from nextcord.abc import GuildChannel
 from nextcord.ext import commands
 
 client = commands.Bot()
-db = MongoClient(os.environ["DB_URL"])["scorekeeper-db"]["scorekeeper-db"]
+cluster = MongoClient(os.environ["DB_URL"])
+collection = cluster["scorekeeper-db"]["scorekeeper-db"]
+clan_db = dict()
+
+for document in collection.find():
+    clan_db[document["_id"]] = document
 
 GUILD_IDS = list()
 for i in client.guilds:
@@ -80,9 +85,7 @@ async def time(interaction: Interaction, clan: str):
         return
     else:
         graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8]
-        # graph_points = db.collection.find_one({"_id": "634b894eb2cbe43b548fa25c"})["EXAMPLE"]
-        graph_points = [14.223, 15.673, 12.32, 7.895, 8.001, 6.798, 4.332, 4.106]
-        print(db.collection.find_one({"_id": "634b894eb2cbe43b548fa25c"}))
+        graph_points = clan_db["634b894eb2cbe43b548fa25c"]["EXAMPLE"]
 
         plot.plot(graph_indexes, graph_points)
         plot.title(f"Score over time: {clan.upper()}")
