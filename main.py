@@ -95,7 +95,7 @@ async def time(interaction: Interaction, clan: str):
         img = nextcord.File(data_stream, filename = "plot.png")
 
         embed = nextcord.Embed(title = f"Score over time for {clan.upper()}", color = nextcord.Color.blurple())
-        embed.set_image(url = "attachments://plot.png")
+        embed.set_image(url = "attachment://plot.png")
 
         await interaction.response.send_message(embed = embed, file = img)
         plot.clf()
