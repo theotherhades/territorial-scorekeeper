@@ -84,7 +84,7 @@ async def time(interaction: Interaction, clan: str):
         await interaction.response.send_message("clan must be `EXAMPLE` for now")
         return
     else:
-        graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8]
+        graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         graph_points = clan_db["634b894eb2cbe43b548fa25c"]["EXAMPLE"]
 
         plot.plot(graph_indexes, graph_points)
