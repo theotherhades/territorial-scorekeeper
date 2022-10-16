@@ -81,6 +81,7 @@ async def time(interaction: Interaction, clan: str):
     else:
         graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8]
         # graph_points = db.collection.find_one({"_id": "634b894eb2cbe43b548fa25c"})["EXAMPLE"]
+        graph_points = [14.223, 15.673, 12.32, 7.895, 8.001, 6.798, 4.332, 4.106]
         print(db.collection.find_one({"_id": "634b894eb2cbe43b548fa25c"}))
 
         plot.plot(graph_indexes, graph_points)
