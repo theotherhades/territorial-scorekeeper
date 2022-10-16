@@ -64,13 +64,6 @@ async def lb(interaction: Interaction, limit: int = 0):
     data_stream.seek(0)
     img = nextcord.File(data_stream, filename = "plot.png")
 
-    """
-    with open("plot.png", "rb") as f:
-        img = nextcord.File(f)
-    
-    os.remove("plot.png")
-    """
-
     embed = nextcord.Embed(title = f"Top {limit} clans", color = nextcord.Color.blurple())
     embed.set_image(url = "attachment://plot.png")
 
@@ -86,6 +79,8 @@ async def setupdatechannel(interaction: Interaction, channel: GuildChannel):
         db.insert_one({"_id": str(interaction.guild.id), "update_channel": str(channel.id)})
     else:
         db.update_one({"_id": str(interaction.guild.id)}, {"$set": {"update_channel": str(channel.id)}})
+    
+    print(f"{interaction.guild.id}: {channel.id}")
 
     await interaction.response.send_message(f":white_check_mark: Set update channel to {channel.mention}")
 
