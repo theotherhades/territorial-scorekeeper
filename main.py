@@ -11,10 +11,6 @@ from nextcord.ext import commands
 client = commands.Bot()
 cluster = MongoClient(os.environ["DB_URL"])
 collection = cluster["scorekeeper-db"]["scorekeeper-db"]
-clan_db = dict()
-
-for document in collection.find():
-    clan_db[str(document["_id"])] = document
 
 GUILD_IDS = list()
 for i in client.guilds:
@@ -84,8 +80,9 @@ async def time(interaction: Interaction, clan: str):
         await interaction.response.send_message("clan must be `EXAMPLE` for now")
         return
     else:
+        document = collection.find({"clan": clan.upper()})
         graph_indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        graph_points = clan_db["634b894eb2cbe43b548fa25c"]["EXAMPLE"]
+        graph_points = document["scores"]
 
         plot.plot(graph_indexes, graph_points)
         plot.title(f"Score over time: {clan.upper()}")
