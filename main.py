@@ -123,8 +123,13 @@ async def level(interaction: Interaction, user: nextcord.Member = None):
     if user == None:
         user = interaction.user
 
+    if user.nick == None:
+        name = user.name
+    else:
+        name = user.nick
+
     data = roblocdb[str(user.id)].find_one()
-    embed = nextcord.Embed(title = f"{user.nick}'s stats")
+    embed = nextcord.Embed(title = f"{name}'s stats")
     embed.add_field(name = "Level", value = data["lvl"])
     embed.add_field(name = "XP", value = data["xp"])
 
