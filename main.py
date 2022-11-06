@@ -11,7 +11,7 @@ from nextcord.ext import commands
 client = commands.Bot()
 cluster = MongoClient(os.environ["DB_URL"])
 collection = cluster["scorekeeper-db"]["scorekeeper-db"]
-levels_collection = cluster["robloc"]["levels"]
+roblocdb = cluster["robloc"]
 
 GUILD_IDS = list()
 for i in client.guilds:
@@ -120,8 +120,22 @@ async def escuminac(interaction: Interaction):
 
 @client.slash_command(name = "level", description = "Get a robloc member's level [in development]", guild_ids = ROBLOC)
 async def level(interaction: Interaction):
-    data = levels_collection.find_one()
+    data = roblocdb[str(interaction.user.id)].find_one()
 
     await interaction.response.send_message(data)
+
+@client.slash_command(name = "levelstart", description = "in development", guild_ids = ROBLOC)
+async def levelstart(interaction: Interaction):
+    collist = roblocdb.list_collection_names()
+    userid = str(interaction.user.id)
+
+    if userid in collist:
+        await interaction.response.send_message(":joy: You're already in the database!")
+    else:
+        usercol = roblocdb[str(interaction.user.id)]
+        usercol.insert_one({"_id": "lvldata", "lvl": 0, "xp": 0})
+
+        await interaction.response.send_message(":white_check_mark: Done")
+
 
 client.run(os.environ["CLIENT_TOKEN"])
