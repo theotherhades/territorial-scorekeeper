@@ -44,6 +44,9 @@ async def on_message(message):
 
             await message.channel.send(f":party: <@{message.author.id}> just leveled up! [{data['lvl'] - 1} -> **{data['lvl']}**]")
 
+    else:
+        print("bruh")
+
 # Global commands
 @client.slash_command(name = "help", description = "A good place to get started with the scorekeeper", guild_ids = GUILD_IDS)
 async def ping(interaction: Interaction):
