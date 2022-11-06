@@ -34,6 +34,7 @@ async def on_message(message):
         data = usercol.find_one()
         lvl_increase_requirement = 100 + (data["lvl"] * 10)
         xp_increase = len(message.content)
+        print(len(message.content))
 
         usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": data["xp"] + xp_increase}})
         data = usercol.find_one()
