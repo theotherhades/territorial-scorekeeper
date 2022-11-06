@@ -106,8 +106,13 @@ async def time(interaction: Interaction, clan: str):
 # ROBLOC COMMANDS
 @client.slash_command(name = "escuminac", description = "heheheha", guild_ids = ROBLOC)
 async def escuminac(interaction: Interaction):
-    await interaction.response.send_message("It's time to ping **escuminac!!!**")
-    for i in range(20):
-        await interaction.channel.send(f"hi <@{946786939200208937}> (ping #{i + 1} of 20)")
+    if interaction.channel.id == 1038795433465626774:
+        await interaction.response.send_message("It's time to ping **escuminac!!!**")
+        for i in range(20):
+            await interaction.channel.send(f"hi <@{946786939200208937}> (ping #{i + 1} of 20)")
+
+    else:
+        channel = client.get_channel(1038795433465626774)
+        await interaction.response.send_message(f"if you want to ping escuminac, please go to {channel.mention} and try again")
 
 client.run(os.environ["CLIENT_TOKEN"])
