@@ -119,10 +119,16 @@ async def escuminac(interaction: Interaction):
         await interaction.response.send_message(f"if you want to ping escuminac, please go to {channel.mention} and try again")
 
 @client.slash_command(name = "level", description = "Get a robloc member's level [in development]", guild_ids = ROBLOC)
-async def level(interaction: Interaction):
-    data = roblocdb[str(interaction.user.id)].find_one()
+async def level(interaction: Interaction, user: nextcord.Member = None):
+    if user == None:
+        user = interaction.user
 
-    await interaction.response.send_message(data)
+    data = roblocdb[str(user.id)].find_one()
+    embed = nextcord.Embed(title = f"{user.nick}'s stats")
+    embed.add_field(name = "Level", value = data["lvl"])
+    embed.add_field(name = "XP", value = data["xp"])
+
+    await interaction.response.send_message(embed = embed)
 
 @client.slash_command(name = "levelstart", description = "in development", guild_ids = ROBLOC)
 async def levelstart(interaction: Interaction):
