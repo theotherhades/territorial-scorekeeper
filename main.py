@@ -4,11 +4,11 @@ import nextcord
 import matplotlib.pyplot as plot
 from pyterri import clan as pyterri_clan
 from pymongo import MongoClient
-from nextcord import Interaction, SlashOption, ChannelType
-from nextcord.abc import GuildChannel
+from nextcord import Interaction
 from nextcord.ext import commands
 
 client = commands.Bot()
+intents = nextcord.Intents.all
 cluster = MongoClient(os.environ["DB_URL"])
 collection = cluster["scorekeeper-db"]["scorekeeper-db"]
 roblocdb = cluster["robloc"]
@@ -44,9 +44,6 @@ async def on_message(message):
             usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": 0}})
 
             await message.channel.send(f":party: <@{message.author.id}> just leveled up! [{data['lvl'] - 1} -> **{data['lvl']}**]")
-
-    else:
-        print("bruh")
 
 # Global commands
 @client.slash_command(name = "help", description = "A good place to get started with the scorekeeper", guild_ids = GUILD_IDS)
@@ -175,4 +172,4 @@ async def levelstart(interaction: Interaction):
         await interaction.response.send_message(":white_check_mark: Done")
 
 
-client.run(os.environ["CLIENT_TOKEN"])
+client.run(os.environ["CLIENT_TOKEN"], intents = intents)
