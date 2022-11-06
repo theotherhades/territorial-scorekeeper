@@ -33,10 +33,7 @@ async def on_message(message):
         usercol = roblocdb[userid]
         data = usercol.find_one()
         lvl_increase_requirement = 100 + (data["lvl"] * 10)
-
-        xp_increase = len(message.content) // 2
-        if xp_increase == 0:
-            xp_increase = 1
+        xp_increase = len(message.content)
 
         usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": data["xp"] + xp_increase}})
         data = usercol.find_one()
