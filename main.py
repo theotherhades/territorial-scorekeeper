@@ -120,6 +120,8 @@ async def escuminac(interaction: Interaction):
 
 @client.slash_command(name = "level", description = "Get a robloc member's level [in development]", guild_ids = ROBLOC)
 async def level(interaction: Interaction):
-    await interaction.response.send_message(levels_collection["63682829caa440001c3a8f5b"]["hello"])
+    data = levels_collection.find_one()
+
+    await interaction.response.send_message(data)
 
 client.run(os.environ["CLIENT_TOKEN"])
