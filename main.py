@@ -107,7 +107,7 @@ async def time(interaction: Interaction, clan: str):
 @client.slash_command(name = "escuminac", description = "heheheha", guild_ids = ROBLOC)
 async def escuminac(interaction: Interaction):
     await interaction.response.send_message("It's time to ping **escuminac!!!**")
-    for i in range(100):
-        await interaction.channel.send(f"hi <@{946786939200208937}>")
+    for i in range(20):
+        await interaction.channel.send(f"hi <@{946786939200208937}> (ping #{i + 1} of 20)")
 
 client.run(os.environ["CLIENT_TOKEN"])
