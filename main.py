@@ -11,6 +11,7 @@ from nextcord.ext import commands
 client = commands.Bot()
 cluster = MongoClient(os.environ["DB_URL"])
 collection = cluster["scorekeeper-db"]["scorekeeper-db"]
+levels_collection = cluster["robloc"]["levels"]
 
 GUILD_IDS = list()
 for i in client.guilds:
@@ -109,10 +110,16 @@ async def escuminac(interaction: Interaction):
     if interaction.channel.id == 1038795433465626774:
         await interaction.response.send_message("It's time to ping **escuminac!!!**")
         for i in range(20):
-            await interaction.channel.send(f"hi <@{946786939200208937}> (ping #{i + 1} of 20)")
+            await interaction.channel.send(f"hi <@{946786939200208937}> (ping **#{i + 1}** of 20)")
+
+        await interaction.channel.send(":white_check_mark: Escuminac has been pinged")
 
     else:
         channel = client.get_channel(1038795433465626774)
         await interaction.response.send_message(f"if you want to ping escuminac, please go to {channel.mention} and try again")
+
+@client.slash_command(name = "level", description = "Get a robloc member's level [in development]", guild_ids = ROBLOC)
+async def level(interaction: Interaction):
+    await interaction.response.send_message(levels_collection["63682829caa440001c3a8f5b"])
 
 client.run(os.environ["CLIENT_TOKEN"])
