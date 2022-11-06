@@ -19,10 +19,21 @@ for i in client.guilds:
 
 ROBLOC = [1038582742700527826]
 
+# Events
 @client.event
 async def on_ready():
     print("bot is online")
 
+@client.event
+async def on_message(message):
+    userid = str(message.author.id)
+    collist = roblocdb.list_collection_names()
+
+    if userid in collist:
+        usercol = roblocdb[userid]
+        usercol.update_one({"xp": usercol.find_one()["xp"]}, {"$set": {"xp": usercol.find_one()["xp"] + 1}})
+
+# Global commands
 @client.slash_command(name = "help", description = "A good place to get started with the scorekeeper", guild_ids = GUILD_IDS)
 async def ping(interaction: Interaction):
     embed = nextcord.Embed(title = "Help", description = "empty for now")
