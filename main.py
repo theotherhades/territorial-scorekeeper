@@ -190,7 +190,16 @@ async def xp_leaderboard(interaction: Interaction):
     idx = 0
     for i in lb:
         idx += 1
-        lb_message += f"{idx}. <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+
+        match idx:
+            case 1:
+                lb_message += f":first_place: **{idx}.** <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+            case 2:
+                lb_message += f":second_place: **{idx}.** <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+            case 3:
+                lb_message += f":third_place: **{idx}.** <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+            case other:
+                lb_message += f"{idx}. <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
         
         if idx - 1 != len(lb):
             lb_message += "\n"
