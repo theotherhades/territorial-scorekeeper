@@ -37,7 +37,7 @@ async def on_message(message):
         lvl_increase_requirement = 100 + (data["lvl"] * 10)
         xp_increase = len(message.content) // 2
         if xp_increase == 0:
-            xp_increase == 1
+            xp_increase = 1
 
         usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": data["xp"] + xp_increase}})
 
@@ -144,7 +144,7 @@ async def escuminac(interaction: Interaction):
         channel = client.get_channel(1038795433465626774)
         await interaction.response.send_message(f"if you want to ping escuminac, please go to {channel.mention} and try again")
 
-@client.slash_command(name = "level", description = "Get a robloc member's level [in development]", guild_ids = ROBLOC)
+@client.slash_command(name = "level", description = "Get a user's level", guild_ids = ROBLOC)
 async def level(interaction: Interaction, user: nextcord.Member = None):
     if user == None:
         user = interaction.user
@@ -158,10 +158,11 @@ async def level(interaction: Interaction, user: nextcord.Member = None):
     embed = nextcord.Embed(title = f"{name}'s stats")
     embed.add_field(name = "Level", value = data["lvl"])
     embed.add_field(name = "XP", value = data["xp"])
+    embed.add_field(name = "Required XP", value = (100 + (data["lvl"] * 10)))
 
     await interaction.response.send_message(embed = embed)
 
-@client.slash_command(name = "levelstart", description = "in development", guild_ids = ROBLOC)
+@client.slash_command(name = "levelstart", description = "The bot will start tracking your messages and levels!", guild_ids = ROBLOC)
 async def levelstart(interaction: Interaction):
     collist = roblocdb.list_collection_names()
     userid = str(interaction.user.id)
