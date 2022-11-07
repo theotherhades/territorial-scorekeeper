@@ -8,7 +8,7 @@ from nextcord import Interaction
 from nextcord.ext import commands
 
 client = commands.Bot()
-intents = nextcord.Intents.all
+intents = nextcord.Intents.messages
 cluster = MongoClient(os.environ["DB_URL"])
 collection = cluster["scorekeeper-db"]["scorekeeper-db"]
 roblocdb = cluster["robloc"]
