@@ -184,13 +184,13 @@ async def xp_leaderboard(interaction: Interaction):
         data = roblocdb[collection].find_one()
         lb.append({"userid": collection, "lvl": data["lvl"], "xp": data["xp"]})
 
-    lb = sorted(lb, key = itemgetter("lvl", "xp"))
+    lb = sorted(lb, key = itemgetter("lvl", "xp"), reverse = True)
     lb_message = ""
     
     idx = 0
     for i in lb:
         idx += 1
-        lb_message += f"{idx}. <@{collection}> {i['xp']}XP | **LVL{i['lvl']}**"
+        lb_message += f"{idx}. <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
         
         if idx - 1 != len(lb):
             lb_message += "\n"
