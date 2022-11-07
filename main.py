@@ -3,6 +3,7 @@ import io
 import nextcord
 import matplotlib.pyplot as plot
 from pyterri import clan as pyterri_clan
+from operator import itemgetter
 from pymongo import MongoClient
 from nextcord import Interaction
 from nextcord.ext import commands
@@ -175,5 +176,26 @@ async def levelstart(interaction: Interaction):
         usercol.insert_one({"_id": "lvldata", "lvl": 0, "xp": 0})
 
         await interaction.response.send_message(":white_check_mark: Done")
+
+@client.slash_command(name = "xp_leaderboard", description = "It kinda speaks for itself")
+async def xp_leaderboard(interaction: Interaction):
+    lb = list()
+    for collection in roblocdb.list_collection_names():
+        data = roblocdb[collection].find_one()
+        lb.append({"userid": collection, "lvl": data["lvl"], "xp": data["xp"]})
+
+    lb = sorted(lb, key = itemgetter("lvl", "xp"))
+    lb_message = ""
+    
+    idx = 0
+    for i in lb:
+        idx += 1
+        lb_message += f"{idx}. <@{collection}> {i['xp']}XP | **LVL{i['lvl']}**"
+        
+        if idx - 1 != len(lb):
+            lb_message += "\n"
+
+    embed = nextcord.Embed(title = "XP Leaderboard", description = lb_message)
+    await interaction.response.send_message(embed = embed)
 
 client.run(os.environ["CLIENT_TOKEN"])
