@@ -173,4 +173,4 @@ async def levelstart(interaction: Interaction):
         await interaction.response.send_message(":white_check_mark: Done")
 
 
-client.run(os.environ["CLIENT_TOKEN"], )
+client.run(os.environ["CLIENT_TOKEN"], intents = intents)
