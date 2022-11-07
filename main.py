@@ -36,12 +36,18 @@ async def on_message(message):
         usercol = roblocdb[userid]
         data = usercol.find_one()
         lvl_increase_requirement = 100 + (data["lvl"] * 10)
-        xp_increase = len(message.content) // 2
+
+        try:
+            xp_increase = len(message.content) // data["lvl"]
+        except ZeroDivisionError:
+            xp_increase = len(message.content)
+
         if xp_increase == 0:
             xp_increase = 1
 
         usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": data["xp"] + xp_increase}})
         data = usercol.find_one()
+        print(f"[xp log] {message.author.name} [{data['xp'] - xp_increase} -> {data['xp']}]\n    xp: {xp_increase}\n    chars: {len(message.content)}\n    id: {message.author.id}\n")
 
         if data["xp"] >= lvl_increase_requirement:
             usercol.update_one({"lvl": data["lvl"]}, {"$set": {"lvl": data["lvl"] + 1}})
@@ -49,6 +55,7 @@ async def on_message(message):
             data = usercol.find_one()
 
             await message.channel.send(f":partying_face: <@{message.author.id}> just leveled up! [{data['lvl'] - 1} -> **{data['lvl']}**]")
+            print(f"[lvl log] {message.author.name} [{data['lvl'] - 1} -> {data['lvl']}]\n    id: {message.author.id}\n")
 
 # Global commands
 @client.slash_command(name = "help", description = "A good place to get started with the scorekeeper", guild_ids = GUILD_IDS)
@@ -193,11 +200,11 @@ async def xp_leaderboard(interaction: Interaction):
 
         match idx:
             case 1:
-                lb_message += f":first_place: **{idx}.** <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+                lb_message += f":first_place: <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
             case 2:
-                lb_message += f":second_place: **{idx}.** <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+                lb_message += f":second_place: <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
             case 3:
-                lb_message += f":third_place: **{idx}.** <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
+                lb_message += f":third_place: <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
             case other:
                 lb_message += f"{idx}. <@{i['userid']}> {i['xp']}XP | **LVL{i['lvl']}**"
         
