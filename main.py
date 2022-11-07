@@ -35,8 +35,9 @@ async def on_message(message):
         usercol = roblocdb[userid]
         data = usercol.find_one()
         lvl_increase_requirement = 100 + (data["lvl"] * 10)
-        xp_increase = len(message.content)
-        print(len(message.content))
+        xp_increase = len(message.content) // 2
+        if xp_increase == 0:
+            xp_increase == 1
 
         usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": data["xp"] + xp_increase}})
         data = usercol.find_one()
@@ -172,6 +173,5 @@ async def levelstart(interaction: Interaction):
         usercol.insert_one({"_id": "lvldata", "lvl": 0, "xp": 0})
 
         await interaction.response.send_message(":white_check_mark: Done")
-
 
 client.run(os.environ["CLIENT_TOKEN"])
