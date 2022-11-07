@@ -40,13 +40,13 @@ async def on_message(message):
             xp_increase == 1
 
         usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": data["xp"] + xp_increase}})
-        data = usercol.find_one()
 
         if data["xp"] >= lvl_increase_requirement:
             usercol.update_one({"lvl": data["lvl"]}, {"$set": {"lvl": data["lvl"] + 1}})
             usercol.update_one({"xp": data["xp"]}, {"$set": {"xp": 0}})
+            data = usercol.find_one()
 
-            await message.channel.send(f":party: <@{message.author.id}> just leveled up! [{data['lvl'] - 1} -> **{data['lvl']}**]")
+            await message.channel.send(f":partying_face: <@{message.author.id}> just leveled up! [{data['lvl'] - 1} -> **{data['lvl']}**]")
 
 # Global commands
 @client.slash_command(name = "help", description = "A good place to get started with the scorekeeper", guild_ids = GUILD_IDS)
